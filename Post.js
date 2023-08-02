@@ -1,11 +1,16 @@
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function Post(props) {
 
     return (
-        <Text style={styles.post}>
-            Id:{props.id} Title:{props.title}
-        </Text>
+        <View style={styles.post}>
+            <Text style={styles.title}>
+                Title:{props.title}
+            </Text>
+            <Text style={styles.text}>
+                {props.text}
+            </Text>
+        </View>
     );
 }
 

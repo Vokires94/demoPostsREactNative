@@ -70,7 +70,7 @@ export default function Posts() {
             <ScrollView style={styles.content}>
                 {posts &&
                     posts.map((post) => (
-                        <Post title={post.title} id={post.id} 
+                        <Post text={post.body} title={post.title} id={post.id} 
                         key={(Math.random() + 1).toString(36).substring(7)}
                         />
                     ))}
