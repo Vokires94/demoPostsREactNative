@@ -16,7 +16,6 @@ export const postsSlice = createSlice({
             state.value = state.value.filter((post) => post.id !== action.payload);
         },
         setPosts: (state, action) => {
-            console.log(action.payload);
             state.value = [...action.payload];
         }
     }

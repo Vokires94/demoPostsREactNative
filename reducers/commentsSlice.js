@@ -16,7 +16,6 @@ export const commentsSlice = createSlice({
             state.value = state.value.filter((post) => post.id !== action.payload);
         },
         setComments: (state, action) => {
-            console.log(action.payload);
             state.value = [...action.payload];
         }
     }

@@ -1,17 +1,19 @@
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPosts } from './reducers/postsSlice';
+import { setPosts, deletePost } from './reducers/postsSlice';
+import { setComments } from './reducers/commentsSlice';
 import Post from './Post';
-// import { useState } from 'react';
 
 export default function Posts() {
 
     const posts = useSelector(state => state.posts.value);
+    const postComments = useSelector(state => state.comments.value);
     const dispatch = useDispatch();
 
     useEffect(() => {
         getPosts();
+        getComments();
     }, []);
 
     const getPosts = async () => {
@@ -22,22 +24,29 @@ export default function Posts() {
         dispatch(setPosts(response));
     };
 
-    //   const [posts, setPosts] = useState();
+    const deletePostById = async (postId) => {
+        await fetch(
+            `https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts/${postId}`, {
+            method: 'DELETE',
+        }).then(
+            () => {
+                dispatch(deletePost(postId));
+            }
+        );
+    };
 
-    //   useEffect(() => {
-    //     // getPosts();
-    //     // addPost();
-    //     // deletePost(1);
-    //   }, []);
+    const getComments = async () => {
+        const response = await fetch(
+            "https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/comments",
+        ).then((response) => response.json());
 
-    // const getPosts = async () => {
-    //   const response = await fetch(
-    //     "https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts",
-    //   ).then((response) => response.json());
+        dispatch(setComments(response));
+    };
 
-    //   // update the state
-    //   setPosts(response);
-    // };
+    const filteredComments = (id) => {
+        const result = postComments.filter((comment)=> comment.postId === id);
+        return result;
+    };
 
     // const addPost = async () => {
     //   const response = await fetch(
@@ -55,23 +64,15 @@ export default function Posts() {
     //   ]);
     // };
 
-    // const deletePost = async (postId) => {
-    //   const response = await fetch(
-    //     `https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts/${postId}`, {
-    //     method: 'DELETE',
-    //   }).then(() => {
-    //     const result = posts.filter((post) => post.id !== postId);
-    //     setPosts(result);
-    //   });
-    // };
-
     return (
         <View style={styles.container}>
             <ScrollView style={styles.content}>
                 {posts &&
                     posts.map((post) => (
-                        <Post text={post.body} title={post.title} id={post.id} 
-                        key={(Math.random() + 1).toString(36).substring(7)}
+                        <Post text={post.body} title={post.title} id={post.id}
+                            key={(Math.random() + 1).toString(36).substring(7)}
+                            deletePost={deletePostById}
+                            comments={filteredComments(post.id)}
                         />
                     ))}
             </ScrollView>
@@ -82,12 +83,12 @@ export default function Posts() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFF",
+        backgroundColor: '#f6f6f6',
         alignItems: "center",
         justifyContent: "center",
     },
     content: {
         width: '100%',
-        backgroundColor: '#f6f6f6',
+        marginBottom: 8,
     },
 });
