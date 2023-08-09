@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, View, Text, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPosts, deletePost } from './reducers/postsSlice';
+import { setPosts, deletePost, addPost, editPost } from './reducers/postsSlice';
 import { setComments } from './reducers/commentsSlice';
 import Post from './Post';
+import Loading from './Loading';
+import { Feather } from '@expo/vector-icons';
+import AddPostDIalog from './AddPostDialog';
 
-export default function Posts() {
+export default function Posts({ navigation }) {
 
+    const [isLoading, setIsLoading] = useState(false);
+    const [isAddPostDialogOpen, setAddPostDialogOpen] = useState(false);
     const posts = useSelector(state => state.posts.value);
     const postComments = useSelector(state => state.comments.value);
     const dispatch = useDispatch();
@@ -17,11 +22,13 @@ export default function Posts() {
     }, []);
 
     const getPosts = async () => {
-        const response = await fetch(
+        await fetch(
             "https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts",
-        ).then((response) => response.json());
-
-        dispatch(setPosts(response));
+        ).then((response) => response.json())
+            .then((result) => dispatch(setPosts(result)))
+            .finally(() => {
+                setIsLoading(true);
+            });
     };
 
     const deletePostById = async (postId) => {
@@ -36,46 +43,89 @@ export default function Posts() {
     };
 
     const getComments = async () => {
-        const response = await fetch(
+        await fetch(
             "https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/comments",
-        ).then((response) => response.json());
-
-        dispatch(setComments(response));
+        ).then((response) => response.json())
+            .then((result) => dispatch(setComments(result)))
+            .finally(() => {
+                setIsLoading(true);
+            });
     };
 
     const filteredComments = (id) => {
-        const result = postComments.filter((comment)=> comment.postId === id);
+        const result = postComments.filter((comment) => comment.postId === id);
         return result;
     };
 
-    // const addPost = async () => {
-    //   const response = await fetch(
-    //     "https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts", {
-    //     method: 'POST',
-    //     body: JSON.stringify({ "id": 4, "title": "Post 4" }),
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //   }).then((response) => response.json());
+    const addNewPost = async (title, description) => {
+        const hashKey = (Math.random() + 1).toString(36).substring(7);
+        await fetch(
+            `https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts`, {
+            method: 'POST',
+            body: JSON.stringify({ "id": hashKey, "title": title, "body": description }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then((response) => response.json())
+            .then((result) => {
+                dispatch(addPost(result));
+            })
+    };
 
-    //   setPosts([
-    //     ...posts,
-    //     { "id": 4, "title": "Post 4" }
-    //   ]);
-    // };
+    const editCurrentPost = async (id, title, description) => {
+        await fetch(
+            `https://my-json-server.typicode.com/Vokires94/demoPostsREactNative/posts/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({ "id": id, "title": title, "body": description }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then((response) => response.json())
+            .then((result) => {
+                dispatch(editPost(result));
+            })
+    };
+
+    const closeDialog = () => {
+        setAddPostDialogOpen(false);
+    }
+
+    const showPostDetails = (postId) => {
+        navigation.navigate('Post Details', {
+            postId,
+            title: posts.filter((post) => post.id === postId)[0].title,
+            description: posts.filter((post) => post.id === postId)[0].body,
+        });
+    }
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.content}>
-                {posts &&
-                    posts.map((post) => (
-                        <Post text={post.body} title={post.title} id={post.id}
-                            key={(Math.random() + 1).toString(36).substring(7)}
-                            deletePost={deletePostById}
-                            comments={filteredComments(post.id)}
-                        />
-                    ))}
-            </ScrollView>
+            {isLoading
+                ? <ScrollView style={styles.content}>
+                    {posts.length > 0 ?
+                        posts.map((post) => (
+                            <Post text={post.body} title={post.title} id={post.id}
+                                key={(Math.random() + 1).toString(36).substring(7)}
+                                deletePost={deletePostById}
+                                editPost={editCurrentPost}
+                                comments={filteredComments(post.id)}
+                                navigatiteDetails={showPostDetails}
+                            />
+                        )) : <Text style={styles.textNoPosts}>No posts</Text>}
+                </ScrollView>
+                : <Loading />
+            }
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.addTaskWrapper}
+            >
+                <TouchableOpacity onPress={() => setAddPostDialogOpen(true)}>
+                    <View style={styles.addTask}>
+                        <Feather name='plus' size={32} color='black' />
+                    </View>
+                </TouchableOpacity>
+            </KeyboardAvoidingView>
+            <AddPostDIalog open={isAddPostDialogOpen} close={() => closeDialog()} add={addNewPost} />
         </View>
     );
 }
@@ -90,5 +140,28 @@ const styles = StyleSheet.create({
     content: {
         width: '100%',
         marginBottom: 8,
+    },
+    textNoPosts: {
+        fontSize: 18,
+        marginLeft: 8,
+    },
+    addTaskWrapper: {
+        position: 'absolute',
+        bottom: 40,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    addTask: {
+        width: 60,
+        height: 60,
+        backgroundColor: '#FFF',
+        borderRadius: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: 'black',
+        borderWidth: 1,
+        marginLeft: 40,
     },
 });

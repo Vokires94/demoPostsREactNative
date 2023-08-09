@@ -8,8 +8,8 @@ export const postsSlice = createSlice({
     reducers: {
         addPost: (state, action) => {
             state.value = [
-                ...state.value,
-                action.payload
+                action.payload,
+                ...state.value
             ];
         },
         deletePost: (state, action) => {
@@ -17,10 +17,20 @@ export const postsSlice = createSlice({
         },
         setPosts: (state, action) => {
             state.value = [...action.payload];
+        },
+        editPost: (state, action) => {
+            const updatedList = state.value.map(obj => {
+                if (obj.id == action.payload.id) {
+                    obj.title = action.payload.title;
+                    obj.body = action.payload.body;
+                }
+                return obj;
+            })
+            state.value = [...updatedList];
         }
     }
 })
 
-export const { addPost, deletePost, setPosts } = postsSlice.actions
+export const { addPost, deletePost, setPosts, editPost } = postsSlice.actions
 
 export default postsSlice.reducer

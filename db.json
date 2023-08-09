@@ -33,7 +33,27 @@
       { "id": 9, "text": "some comment9", "postId": 3 },
       { "id": 10, "text": "some comment10dfgh dfgh dfghdfgh dfghdfg hdfghdfghdfgh dfghdfg hdfghdfg dfghdfg hdfgh dgh dfghdfghd fgh dfg", "postId": 3 },
       { "id": 11, "text": "some comment11", "postId": 3 },
-      { "id": 12, "text": "some comment12", "postId": 3 }
+      { "id": 12, "text": "some comment12", "postId": 3 },
+      { "id": 13, "text": "some comment11", "postId": 1 },
+      { "id": 14, "text": "some comment12", "postId": 1 },
+      { "id": 15, "text": "some comment11", "postId": 1 },
+      { "id": 16, "text": "some comment12", "postId": 1 },
+      { "id": 17, "text": "some comment11", "postId": 1 },
+      { "id": 18, "text": "some comment12", "postId": 1 },
+      { "id": 19, "text": "some comment11", "postId": 1 },
+      { "id": 20, "text": "some comment12", "postId": 1 },
+      { "id": 21, "text": "some comment11", "postId": 1 },
+      { "id": 22, "text": "some comment12", "postId": 1 },
+      { "id": 23, "text": "some comment12", "postId": 1 },
+      { "id": 24, "text": "some comment11", "postId": 1 },
+      { "id": 25, "text": "some comment12", "postId": 1 },
+      { "id": 26, "text": "some comment11", "postId": 1 },
+      { "id": 27, "text": "some comment12", "postId": 1 },
+      { "id": 28, "text": "some comment11", "postId": 1 },
+      { "id": 29, "text": "some comment12", "postId": 1 },
+      { "id": 30, "text": "some comment12", "postId": 1 },
+      { "id": 31, "text": "some comment11", "postId": 1 },
+      { "id": 32, "text": "some comment12", "postId": 1 }
     ],
     "profile": {
       "name": "pavlo"
