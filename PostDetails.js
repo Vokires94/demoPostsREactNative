@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     comments: {
         width: '100%',
         marginBottom: 8,
-        borderWidth: 1,
     },
     comment: {
         borderWidth: 1,
