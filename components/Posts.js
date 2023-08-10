@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPosts, deletePost, addPost, editPost } from './reducers/postsSlice';
-import { setComments } from './reducers/commentsSlice';
+import { setPosts, deletePost, addPost, editPost } from '../store/reducers/postsSlice';
+import { setComments } from '../store/reducers/commentsSlice';
 import Post from './Post';
 import Loading from './Loading';
 import { Feather } from '@expo/vector-icons';
@@ -115,16 +115,12 @@ export default function Posts({ navigation }) {
                 </ScrollView>
                 : <Loading />
             }
-            <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={styles.addTaskWrapper}
-            >
-                <TouchableOpacity onPress={() => setAddPostDialogOpen(true)}>
-                    <View style={styles.addTask}>
-                        <Feather name='plus' size={32} color='black' />
-                    </View>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+
+            <TouchableOpacity style={styles.addTaskWrapper} onPress={() => setAddPostDialogOpen(true)}>
+                <View style={styles.addTask}>
+                    <Feather name='plus' size={32} color='black' />
+                </View>
+            </TouchableOpacity>
             <AddPostDIalog open={isAddPostDialogOpen} close={() => closeDialog()} add={addNewPost} />
         </View>
     );
@@ -148,20 +144,16 @@ const styles = StyleSheet.create({
     addTaskWrapper: {
         position: 'absolute',
         bottom: 40,
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+        left: 40,
     },
     addTask: {
         width: 60,
         height: 60,
-        backgroundColor: '#FFF',
         borderRadius: 60,
+        backgroundColor: '#FFF',
         justifyContent: 'center',
         alignItems: 'center',
         borderColor: 'black',
         borderWidth: 1,
-        marginLeft: 40,
     },
 });
