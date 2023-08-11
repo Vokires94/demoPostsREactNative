@@ -23,7 +23,8 @@ const AddPostDIalog = (props) => {
     }
 
     const add = () => {
-        const isValidTitle = validateTitle(/^[a-zA-Z ]*$/);
+        
+        const isValidTitle = validateTitle(/\p{Letter}/u);
         const isValidpDescription = validateDescription();
         if (isValidTitle && isValidpDescription) {
             setIsLoading(true);
