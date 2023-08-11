@@ -12,7 +12,7 @@ For local testing use:
 * choose r to run in mobile device
 
 # Prepare expo apk build config
-use manul for more details https://docs.expo.dev/build/setup/
+use manual for more details https://docs.expo.dev/build/setup/
 
 * npm install -g eas-cli (skip if done already)
 * eas login
@@ -21,9 +21,9 @@ use manul for more details https://docs.expo.dev/build/setup/
 # Expo apk Android build
 * Make sure to get familiar with process of creation apk in article (https://docs.expo.dev/build-reference/apk/)
 * modify the eas.json by adding one of the following properties in a build profile:
-    developmentClient to true (default)
-    android.buildType to apk
-    android.gradleCommand to :app:assembleRelease, :app:assembleDebug or any other gradle command that produces .apk
+    * developmentClient to true (default)
+    * android.buildType to apk
+    * android.gradleCommand to :app:assembleRelease, :app:assembleDebug or any other gradle command that produces .apk
 * eas build -p android --profile preview
 * Await build preparing
 * Then go to your expo home page https://expo.dev/ select your build will be there
