@@ -22,19 +22,23 @@ export default function Comment(props) {
     }
 
     const save = () => {
-        props.editCommentById(props.comment.id, editedComment).then(
-            () => { },
-            () => {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Server error editing comment',
-                });
-            }
-        ).finally(
-            () => {
-                setIsEditing(false);
-            }
-        )
+        if (editedComment !== "") {
+            props.editCommentById(props.comment.id, editedComment).then(
+                () => { },
+                () => {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Server error editing comment',
+                    });
+                }
+            ).finally(
+                () => {
+                    setIsEditing(false);
+                }
+            )
+        } else {
+            cancel();
+        }
     }
 
     return (

@@ -6,15 +6,14 @@ import { Button } from '@react-native-material/core';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import Comment from './Comment';
 
-export default function PostDetails({ route }) {
+export default function Comments({ route }) {
 
     const [newComment, setNewComment] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { postId, title, description } = route.params;
     const dispatch = useDispatch();
     const comments = useSelector(state => {
-        const allComments = state.comments.value;
-        return allComments.filter((comment) => comment.postId === postId);
+        return state.comments.value;
     });
 
     const scrollViewComments = useRef(null);
@@ -22,6 +21,10 @@ export default function PostDetails({ route }) {
     const scrollToElement = (obj) => {
         scrollViewComments.current.scrollTo(obj);
     }
+
+    const filteredComments = (data) => {
+        return data.filter((comment) => comment.postId === postId);
+    };
 
     const addNewComment = async () => {
         if (newComment !== "") {
@@ -90,8 +93,8 @@ export default function PostDetails({ route }) {
                 <Text style={styles.commentsTitle}>Comments:</Text>
             </View>
             <ScrollView style={styles.comments} ref={scrollViewComments}>
-                {comments.length > 0 ?
-                    comments.map((comment) => (
+                {filteredComments(comments).length > 0 ?
+                    filteredComments(comments).map((comment) => (
                         <Comment
                             key={(Math.random() + 1).toString(36).substring(7)}
                             comment={comment}

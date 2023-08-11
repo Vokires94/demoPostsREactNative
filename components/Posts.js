@@ -5,8 +5,8 @@ import { setPosts, deletePost, addPost, editPost } from '../store/reducers/posts
 import { setComments } from '../store/reducers/commentsSlice';
 import Post from './Post';
 import Loading from './Loading';
-import { Feather } from '@expo/vector-icons';
 import AddPostDIalog from './AddPostDialog';
+import { Feather } from '@expo/vector-icons';
 
 export default function Posts({ navigation }) {
 
@@ -90,7 +90,7 @@ export default function Posts({ navigation }) {
         setAddPostDialogOpen(false);
     }
 
-    const showPostDetails = (postId) => {
+    const showComments = (postId) => {
         navigation.navigate('Post Details', {
             postId,
             title: posts.filter((post) => post.id === postId)[0].title,
@@ -101,26 +101,27 @@ export default function Posts({ navigation }) {
     return (
         <View style={styles.container}>
             {isLoading
-                ? <ScrollView style={styles.content}>
-                    {posts.length > 0 ?
-                        posts.map((post) => (
-                            <Post text={post.body} title={post.title} id={post.id}
-                                key={(Math.random() + 1).toString(36).substring(7)}
-                                deletePost={deletePostById}
-                                editPost={editCurrentPost}
-                                comments={filteredComments(post.id)}
-                                navigatiteDetails={showPostDetails}
-                            />
-                        )) : <Text style={styles.textNoPosts}>No posts</Text>}
-                </ScrollView>
+                ? <>
+                    <ScrollView style={styles.content}>
+                        {posts.length > 0 ?
+                            posts.map((post) => (
+                                <Post text={post.body} title={post.title} id={post.id}
+                                    key={(Math.random() + 1).toString(36).substring(7)}
+                                    deletePost={deletePostById}
+                                    editPost={editCurrentPost}
+                                    comments={filteredComments(post.id)}
+                                    navigatiteDetails={showComments}
+                                />
+                            )) : <Text style={styles.textNoPosts}>No posts</Text>}
+                    </ScrollView>
+                    <TouchableOpacity style={styles.addTaskWrapper} onPress={() => setAddPostDialogOpen(true)}>
+                        <View style={styles.addTask}>
+                            <Feather name='plus' size={32} color='black' />
+                        </View>
+                    </TouchableOpacity>
+                </>
                 : <Loading />
             }
-
-            <TouchableOpacity style={styles.addTaskWrapper} onPress={() => setAddPostDialogOpen(true)}>
-                <View style={styles.addTask}>
-                    <Feather name='plus' size={32} color='black' />
-                </View>
-            </TouchableOpacity>
             <AddPostDIalog open={isAddPostDialogOpen} close={() => closeDialog()} add={addNewPost} />
         </View>
     );

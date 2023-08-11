@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Posts from './components/Posts';
-import PostDetails from './components/PostDetails';
+import Comments from './components/Comments';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import store from './store/store'
-import { Provider } from 'react-redux';
 import { Provider as DialogProvider } from '@react-native-material/core';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import store from './store/store'
+import { Provider } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +22,7 @@ export default function App() {
             />
             <Stack.Screen
               name="Post Details"
-              component={PostDetails}
+              component={Comments}
             />
           </Stack.Navigator>
         </NavigationContainer>
